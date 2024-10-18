@@ -1,0 +1,71 @@
+server:
+  port: 8085
+
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  datasource:
+    url: jdbc:postgresql://192.168.8.128:5432/sky_take_out
+    username: postgres
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+#  redis:
+#    host: ${sky.redis.host}
+#    port: ${sky.redis.port}
+#    password: ${sky.redis.password}
+#    database: ${sky.redis.database}
+
+mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.demo.sky.dao
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    root: debug
+    com:
+      demo:
+        sky:
+          mapper: debug
+          service: debug
+          controller: debug
+
+sky:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    admin-secret-key: itcast
+    # 设置jwt过期时间
+    admin-ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: token
+    user-secret-key: demo
+    user-ttl: 7200000
+    user-token-name: authentication
+#  alioss:
+#    endpoint: ${sky.alioss.endpoint}
+#    access-key-id: ${sky.alioss.access-key-id}
+#    access-key-secret: ${sky.alioss.access-key-secret}
+#    bucket-name: ${sky.alioss.bucket-name}
+#  wechat:
+#    appid: ${sky.wechat.appid}
+#    secret: ${sky.wechat.secret}
+#    mchid: ${sky.wechat.mchid}
+#    mchSerialNo: ${sky.wechat.mchSerialNo}
+#    privateKeyFilePath: ${sky.wechat.privateKeyFilePath}
+#    apiV3Key: ${sky.wechat.apiV3Key}
+#    weChatPayCertFilePath: ${sky.wechat.weChatPayCertFilePath}
+#    notifyUrl: ${sky.wechat.notifyUrl}
+#    refundNotifyUrl: ${sky.wechat.refundNotifyUrl}
+#  shop:
+#    address: 湖北省武汉市洪山区徐东大街18号
+#  baidu:
+#    ak: EFEEFFEFEFE
