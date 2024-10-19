@@ -7,19 +7,20 @@ spring:
   main:
     allow-circular-references: true
   datasource:
-    url: jdbc:postgresql://192.168.8.128:5432/sky_take_out
-    username: postgres
-    password: 123456
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: ${sky.datasource.driver-class-name}
+    url: jdbc:postgresql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}
+    username: ${sky.datasource.username}
+    password: ${sky.datasource.password}
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-#  redis:
-#    host: ${sky.redis.host}
-#    port: ${sky.redis.port}
-#    password: ${sky.redis.password}
-#    database: ${sky.redis.database}
+  data:
+    redis:
+      host: ${sky.redis.host}
+      port: ${sky.redis.port}
+      password: ${sky.redis.password}
+      database: ${sky.redis.database}
 
 mybatis:
   #mapper配置文件
@@ -38,6 +39,24 @@ logging:
           mapper: debug
           service: debug
           controller: debug
+
+springdoc:
+  packages-to-scan:
+    - com.demo.sky.controller.admin
+    - com.demo.sky.controller.user
+  paths-to-match:
+    - /admin/**
+    - /user/**
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
 
 sky:
   jwt:
