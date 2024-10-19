@@ -1,5 +1,9 @@
 ## sky-take-out
 
-（仿苍穹外卖）
+个人学习向，仿苍穹外卖
 
-jdk17 + springboot3 + openapi3 + knife4j + PostgreSQL + 
+java: jdk17 + springboot3
+
+api文档: openapi3 + knife4j
+
+数据库: PostgreSQL + redis
