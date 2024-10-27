@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>sky-take-out-demo</artifactId>
+        <artifactId>take-out-demo</artifactId>
         <groupId>com.demo.sky</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -11,7 +11,7 @@
         <spring-cloud.version>2022.0.4</spring-cloud.version>
     </properties>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>sky-take-out-common</artifactId>
+    <artifactId>take-out-common</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>

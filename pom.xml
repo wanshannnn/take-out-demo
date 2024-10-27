@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.demo.sky</groupId>
-    <artifactId>sky-take-out-demo</artifactId>
+    <artifactId>take-out-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>sky-take-out-demo</name>
     <description>sky-take-out-demo</description>
     <modules>
-        <module>sky-take-out-common</module>
-        <module>sky-take-out-pojo</module>
-        <module>sky-take-out-service</module>
+        <module>take-out-common</module>
+        <module>take-out-pojo</module>
+        <module>take-out-service</module>
     </modules>
     <properties>
         <java.version>17</java.version>

@@ -1,5 +1,9 @@
 server:
-  port: 8085
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
 
 spring:
   profiles:
@@ -41,12 +45,13 @@ logging:
           controller: debug
 
 springdoc:
-  packages-to-scan:
-    - com.demo.sky.controller.admin
-    - com.demo.sky.controller.user
-  paths-to-match:
-    - /admin/**
-    - /user/**
+  group-configs:
+    - group: '管理端'
+      paths-to-match: '/admin/**'
+      packages-to-scan: com.demo.sky.controller.admin
+    - group: '用户端'
+      paths-to-match: '/user/**'
+      packages-to-scan: com.demo.sky.controller.user
   swagger-ui:
     path: /swagger-ui.html
     tags-sorter: alpha
