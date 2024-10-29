@@ -1,6 +1,8 @@
 package com.demo.sky.mapper;
 
-import com.github.pagehelper.Page;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.demo.sky.dto.GoodsSalesDTO;
 import com.demo.sky.dto.OrdersPageQueryDTO;
 import com.demo.sky.dao.Orders;
@@ -12,12 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mapper
-public interface OrderMapper {
-    /**
-     * 插入订单数据
-     * @param order
-     */
-    void insert(Orders order);
+public interface OrderMapper extends BaseMapper<Orders> {
 
     /**
      * 根据订单号和用户id查询订单
@@ -26,26 +23,6 @@ public interface OrderMapper {
      * @return
      */
     Orders getByNumberAndUserId(@Param("orderNumber") String orderNumber, @Param("userId") Long userId);
-
-    /**
-     * 修改订单信息
-     * @param orders
-     */
-    void update(Orders orders);
-
-    /**
-     * 分页条件查询
-     * @param ordersPageQueryDTO
-     * @return
-     */
-    Page<Orders> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
-
-    /**
-     * 根据id查询订单
-     * @param id
-     * @return
-     */
-    Orders getById(Long id);
 
     /**
      * 根据状态，分别查询出接待单，待派送、派送中的订单数量
@@ -81,4 +58,12 @@ public interface OrderMapper {
      * @param end
      */
     List<GoodsSalesDTO> getSalesTop10(LocalDateTime begin, LocalDateTime end);
+
+
+    /**
+     * 分页条件查询
+     * @param ordersPageQueryDTO
+     * @return
+     */
+    IPage<Orders> pageQuery(Page<Orders> page, @Param("query") OrdersPageQueryDTO ordersPageQueryDTO);
 }

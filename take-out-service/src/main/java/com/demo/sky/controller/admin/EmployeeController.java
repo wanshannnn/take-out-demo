@@ -1,12 +1,12 @@
 package com.demo.sky.controller.admin;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.demo.sky.constant.JwtClaimsConstant;
 import com.demo.sky.dto.EmployeeDTO;
 import com.demo.sky.dto.EmployeeLoginDTO;
 import com.demo.sky.dto.EmployeePageQueryDTO;
 import com.demo.sky.dao.Employee;
 import com.demo.sky.properties.JwtProperties;
-import com.demo.sky.result.PageResult;
 import com.demo.sky.result.Result;
 import com.demo.sky.service.EmployeeService;
 import com.demo.sky.utils.JwtUtil;
@@ -89,14 +89,15 @@ public class EmployeeController {
 
     /**
      * 员工分页查询
+     *
      * @param employeePageQueryDTO
      * @return
      */
     @GetMapping("/page")
     @Operation(summary = "员工分页查询")
-    public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO) {
+    public Result<Page<Employee>> page(EmployeePageQueryDTO employeePageQueryDTO) {
         log.info("员工分页查询，参数为：{}", employeePageQueryDTO);
-        PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
+        Page<Employee> pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
     }
 

@@ -24,11 +24,14 @@ public class UserServiceImpl implements UserService {
     //微信服务接口地址
     public static final String WX_LOGIN = "https://api.weixin.qq.com/sns/jscode2session";
 
-    @Autowired
-    private WeChatProperties weChatProperties;
 
-    @Autowired
-    private UserMapper userMapper;
+    private final WeChatProperties weChatProperties;
+    private final UserMapper userMapper;
+
+    public UserServiceImpl(WeChatProperties weChatProperties, UserMapper userMapper) {
+        this.weChatProperties = weChatProperties;
+        this.userMapper = userMapper;
+    }
 
     /**
      * 微信登录

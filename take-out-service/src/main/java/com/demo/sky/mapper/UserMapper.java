@@ -1,5 +1,6 @@
 package com.demo.sky.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.demo.sky.annotation.AutoFill;
 import com.demo.sky.dao.User;
 import com.demo.sky.enumeration.OperationType;
@@ -9,13 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.Map;
 
 @Mapper
-public interface UserMapper {
-    /**
-     * 根据id获取用户信息
-     * @param id
-     * @return
-     */
-    User getById(String id);
+public interface UserMapper extends BaseMapper<User> {
 
     /**
      * 根据openid获取当前用户
@@ -23,13 +18,6 @@ public interface UserMapper {
      * @return
      */
     User getByOpenId(@Param("openid") String openid);
-
-    /**
-     * 创建新用户
-     * @param user
-     */
-    @AutoFill(OperationType.INSERT)
-    void insert(User user);
 
     /**
      * 根据动态条件统计用户数量

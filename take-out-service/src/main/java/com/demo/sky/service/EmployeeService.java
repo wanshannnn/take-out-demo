@@ -1,10 +1,10 @@
 package com.demo.sky.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.demo.sky.dao.Employee;
 import com.demo.sky.dto.EmployeeDTO;
 import com.demo.sky.dto.EmployeeLoginDTO;
 import com.demo.sky.dto.EmployeePageQueryDTO;
-import com.demo.sky.result.PageResult;
 
 public interface EmployeeService {
 
@@ -23,10 +23,11 @@ public interface EmployeeService {
 
     /**
      * 员工分页查询
+     *
      * @param employeePageQueryDTO
      * @return
      */
-    PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+    IPage<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 
     /**
      * 启用禁用员工账户

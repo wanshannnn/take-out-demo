@@ -1,12 +1,15 @@
 package com.demo.sky.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.demo.sky.dao.SetmealDish;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 @Mapper
-public interface SetmealDishMapper {
+public interface SetmealDishMapper extends BaseMapper<SetmealDish> {
+
     /**
      * 判断当前菜品是否被套餐关联了
      * @param ids
@@ -22,14 +25,16 @@ public interface SetmealDishMapper {
 
     /**
      * 删除套餐餐品关系表中的数据
-     * @param id
+     * @param setmealId
+     * @return 删除记录数
      */
-    void deleteBySetmaleId(Long id);
+    int deleteBySetmealId(@Param("setmealId") Long setmealId);
 
     /**
      * 根据套餐信息查询菜品信息
-     * @param id
-     * @return
+     * @param setmealId
+     * @return 菜品信息列表
      */
-    List<SetmealDish> getBySetmealId(Long id);
+    List<SetmealDish> getBySetmealId(@Param("setmealId") Long setmealId);
+
 }

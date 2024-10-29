@@ -12,7 +12,7 @@ spring:
     allow-circular-references: true
   datasource:
     driver-class-name: ${sky.datasource.driver-class-name}
-    url: jdbc:postgresql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}
+    url: jdbc:mysql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}
     username: ${sky.datasource.username}
     password: ${sky.datasource.password}
   jpa:

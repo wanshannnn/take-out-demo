@@ -1,5 +1,7 @@
 package com.demo.sky.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.demo.sky.dto.CategoryDTO;
 import com.demo.sky.dto.CategoryPageQueryDTO;
 import com.demo.sky.dao.Category;
@@ -7,7 +9,7 @@ import com.demo.sky.result.PageResult;
 
 import java.util.List;
 
-public interface CategoryService {
+public interface CategoryService extends IService<Category> {
 
     /**
      * 新增分类
@@ -20,7 +22,7 @@ public interface CategoryService {
      * @param categoryPageQueryDTO
      * @return
      */
-    PageResult pageQuery(CategoryPageQueryDTO categoryPageQueryDTO);
+    IPage<Category> pageQuery(CategoryPageQueryDTO categoryPageQueryDTO);
 
     /**
      * 根据id删除分类

@@ -1,10 +1,11 @@
 package com.demo.sky.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.demo.sky.dao.AddressBook;
 
 import java.util.List;
 
-public interface AddressBookService {
+public interface AddressBookService extends IService<AddressBook> {
 
     /**
      * 条件查询
@@ -15,9 +16,11 @@ public interface AddressBookService {
 
     /**
      * 新增地址
+     *
      * @param addressBook
+     * @return
      */
-    void save(AddressBook addressBook);
+    boolean save(AddressBook addressBook);
 
     /**
      * 根据id查询
@@ -43,4 +46,5 @@ public interface AddressBookService {
      * @param id
      */
     void deleteById(Long id);
+
 }

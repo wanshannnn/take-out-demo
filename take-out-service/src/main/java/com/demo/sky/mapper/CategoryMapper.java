@@ -1,44 +1,28 @@
 package com.demo.sky.mapper;
 
-import com.github.pagehelper.Page;
-import com.demo.sky.annotation.AutoFill;
-import com.demo.sky.dto.CategoryPageQueryDTO;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.demo.sky.dao.Category;
-import com.demo.sky.enumeration.OperationType;
+import com.demo.sky.dao.Employee;
+import com.demo.sky.dto.CategoryPageQueryDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-@Mapper
-public interface CategoryMapper {
 
-    /**
-     * 插入数据
-     * @param category
-     */
-    @AutoFill(OperationType.INSERT)
-    void insert(Category category);
+@Mapper
+public interface CategoryMapper extends BaseMapper<Category> {
 
     /**
      * 分页查询
-     * @param categoryPageQueryDTO
-     * @return
+     * @param page 分页对象
+     * @param categoryPageQueryDTO 查询条件
+     * @return IPage<Category> 分页结果
      */
-    Page<Category> pageQuery(CategoryPageQueryDTO categoryPageQueryDTO);
+    IPage<Category> pageCategory(Page<Category> page, @Param("query") CategoryPageQueryDTO categoryPageQueryDTO);
 
-    /**
-     * 根据id删除分类
-     * @param id
-     */
-    void deleteById(@Param("id") Long id);
-
-    /**
-     * 根据id修改分类
-     * @param category
-     */
-    @AutoFill(OperationType.UPDATE)
-    void update(Category category);
 
     /**
      * 根据类型查询分类
@@ -46,4 +30,5 @@ public interface CategoryMapper {
      * @return
      */
     List<Category> list(Integer type);
+
 }

@@ -24,17 +24,20 @@ import java.util.Map;
 @Slf4j
 public class WorkspaceServiceImpl implements WorkspaceService {
 
-    @Autowired
     private OrderMapper orderMapper;
-
-    @Autowired
     private UserMapper userMapper;
-
-    @Autowired
     private DishMapper dishMapper;
-
-    @Autowired
     private SetmealMapper setmealMapper;
+
+    public WorkspaceServiceImpl(OrderMapper orderMapper,
+                                UserMapper userMapper,
+                                DishMapper dishMapper,
+                                SetmealMapper setmealMapper) {
+        this.orderMapper = orderMapper;
+        this.userMapper = userMapper;
+        this.dishMapper = dishMapper;
+        this.setmealMapper = setmealMapper;
+    }
 
     /**
      * 根据时间段统计营业数据

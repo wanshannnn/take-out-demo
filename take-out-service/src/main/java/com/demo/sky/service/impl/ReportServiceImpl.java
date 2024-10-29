@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -32,14 +31,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ReportServiceImpl implements ReportService {
 
-    @Autowired
-    private OrderMapper orderMapper;
+    private final OrderMapper orderMapper;
+    private final UserMapper userMapper;
+    private final WorkspaceService workspaceService;
 
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private WorkspaceService workspaceService;
+    public ReportServiceImpl(OrderMapper orderMapper, UserMapper userMapper, WorkspaceService workspaceService) {
+        this.orderMapper = orderMapper;
+        this.userMapper = userMapper;
+        this.workspaceService = workspaceService;
+    }
 
     /**
      * 根据时间区间统计营业额
@@ -67,13 +67,13 @@ public class ReportServiceImpl implements ReportService {
             map.put("begin", beginTime);
             map.put("end", endTime);
 
-//            根据动态条件统计营业额
+            // 根据动态条件统计营业额
             Double turnover = orderMapper.sumByMap(map);
             turnover = turnover == null ? 0.0 : turnover;
             turnoverList.add(turnover);
         }
 
-        //数据封装
+        // 数据封装
         return TurnoverReportVO.builder()
                 .dateList(StringUtils.join(dateList, ","))
                 .turnoverList(StringUtils.join(turnoverList, ","))
@@ -135,33 +135,33 @@ public class ReportServiceImpl implements ReportService {
             dateList.add(begin);
         }
 
-//        每天订单总数集合
+        // 每天订单总数集合
         ArrayList<Integer> orderCountList = new ArrayList<>();
 
-//        媒体有效订单数集合
+        // 媒体有效订单数集合
         ArrayList<Integer> validOrderCountList = new ArrayList<>();
 
         dateList.forEach(date->{
             LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);
             LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
 
-//            查询每天总数
+            // 查询每天总数
             Integer orderCount = getOrderCount(beginTime, endTime, null);
 
-//            查询每天有效订单数
+            // 查询每天有效订单数
             Integer validOrderCount = getOrderCount(beginTime, endTime, Orders.COMPLETED);
 
             orderCountList.add(orderCount);
             validOrderCountList.add(validOrderCount);
         });
 
-//        时间区间内的总订单数
+        // 时间区间内的总订单数
         Integer totalOrderCount = orderCountList.stream().reduce(Integer::sum).get();
 
-//        区间时间内有效订单数
+        // 区间时间内有效订单数
         Integer validOrderCount = validOrderCountList.stream().reduce(Integer::sum).get();
 
-//        订单完成率
+        // 订单完成率
         Double orderCompletionRate = 0.0;
         if (totalOrderCount != 0) {
             orderCompletionRate = validOrderCount.doubleValue() / totalOrderCount;
@@ -205,19 +205,19 @@ public class ReportServiceImpl implements ReportService {
     public void exportBusinessData(HttpServletResponse response) {
         LocalDate begin = LocalDate.now().minusDays(30);
         LocalDate end = LocalDate.now().minusDays(1);
-        //查询概览运营数据，提供给Excel模板文件
+        // 查询概览运营数据，提供给Excel模板文件
         BusinessDataVO businessData = workspaceService.getBusinessData(LocalDateTime.of(begin,LocalTime.MIN), LocalDateTime.of(end, LocalTime.MAX));
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("template/运营数据报表模板.xlsx");
         try {
-            //基于提供好的模板文件创建一个新的Excel表格对象
+            // 基于提供好的模板文件创建一个新的Excel表格对象
             XSSFWorkbook excel = new XSSFWorkbook(inputStream);
-            //获得Excel文件中的一个Sheet页
+            // 获得Excel文件中的一个Sheet页
             XSSFSheet sheet = excel.getSheet("Sheet1");
 
             sheet.getRow(1).getCell(1).setCellValue(begin + "至" + end);
-            //获得第4行
+            // 获得第4行
             XSSFRow row = sheet.getRow(3);
-            //获取单元格
+            // 获取单元格
             row.getCell(2).setCellValue(businessData.getTurnover());
             row.getCell(4).setCellValue(businessData.getOrderCompletionRate());
             row.getCell(6).setCellValue(businessData.getNewUsers());
@@ -226,7 +226,7 @@ public class ReportServiceImpl implements ReportService {
             row.getCell(4).setCellValue(businessData.getUnitPrice());
             for (int i = 0; i < 30; i++) {
                 LocalDate date = begin.plusDays(i);
-                //准备明细数据
+                // 准备明细数据
                 businessData = workspaceService.getBusinessData(LocalDateTime.of(date,LocalTime.MIN), LocalDateTime.of(date, LocalTime.MAX));
                 row = sheet.getRow(7 + i);
                 row.getCell(1).setCellValue(date.toString());
@@ -236,10 +236,10 @@ public class ReportServiceImpl implements ReportService {
                 row.getCell(5).setCellValue(businessData.getUnitPrice());
                 row.getCell(6).setCellValue(businessData.getNewUsers());
             }
-            //通过输出流将文件下载到客户端浏览器中
+            // 通过输出流将文件下载到客户端浏览器中
             ServletOutputStream out = response.getOutputStream();
             excel.write(out);
-            //关闭资源
+            // 关闭资源
             out.flush();
             out.close();
             excel.close();

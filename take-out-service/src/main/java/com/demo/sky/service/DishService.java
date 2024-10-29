@@ -1,5 +1,6 @@
 package com.demo.sky.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.demo.sky.dto.DishDTO;
 import com.demo.sky.dto.DishPageQueryDTO;
 import com.demo.sky.dao.Dish;
@@ -8,7 +9,7 @@ import com.demo.sky.vo.DishVO;
 
 import java.util.List;
 
-public interface DishService {
+public interface DishService extends IService<Dish> {
     /**
      * 新增菜品
      * @param dishDTO
