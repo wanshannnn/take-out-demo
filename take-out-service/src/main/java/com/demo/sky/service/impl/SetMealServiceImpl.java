@@ -76,7 +76,7 @@ public class SetMealServiceImpl extends ServiceImpl<SetmealDishMapper, SetmealDi
     @Override
     public PageResult pageQuery(SetmealPageQueryDTO setmealPageQueryDTO) {
         Page<SetmealVO> page = new Page<>(setmealPageQueryDTO.getPage(), setmealPageQueryDTO.getPageSize());
-        IPage<SetmealVO> resultPage = setmealMapper.pageQuery(page, setmealPageQueryDTO);
+        IPage<SetmealVO> resultPage = setmealMapper.pageSetmeal(page, setmealPageQueryDTO);
         return new PageResult(resultPage.getTotal(), resultPage.getRecords());
     }
 

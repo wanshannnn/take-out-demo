@@ -218,7 +218,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         ordersPageQueryDTO.setStatus(status);
 
         // 分页条件查询
-        IPage<Orders> resultPage = orderMapper.pageQuery(page, ordersPageQueryDTO);
+        IPage<Orders> resultPage = orderMapper.pageOrder(page, ordersPageQueryDTO);
 
         ArrayList<OrderVO> list = new ArrayList<>();
 
@@ -337,7 +337,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     @Override
     public PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
         Page<Orders> page = new Page<>(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
-        IPage<Orders> pageQuery = orderMapper.pageQuery(page, ordersPageQueryDTO);
+        IPage<Orders> pageQuery = orderMapper.pageOrder(page, ordersPageQueryDTO);
 
         // 部分订单状态，需要额外返回订单菜品信息，将orders转化为orderVo
         List<OrderVO> orderVoList = getOrderVoList((Page<Orders>) pageQuery.getRecords());

@@ -1,11 +1,13 @@
 package com.demo.sky.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.demo.sky.constant.MessageConstant;
 import com.demo.sky.constant.StatusConstant;
+import com.demo.sky.dao.SetmealDish;
 import com.demo.sky.dto.DishDTO;
 import com.demo.sky.dto.DishPageQueryDTO;
 import com.demo.sky.dao.Dish;
@@ -43,6 +45,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         this.setmealMapper = setmealMapper;
     }
 
+
     /**
      * 新增菜品
      * @param dishDTO
@@ -71,7 +74,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     @Override
     public PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO) {
         Page<DishVO> page = new Page<>(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
-        dishMapper.pageQuery(page, dishPageQueryDTO);
+        dishMapper.pageDish(page, dishPageQueryDTO);
         return new PageResult(page.getTotal(), page.getRecords());
     }
 

@@ -3,7 +3,6 @@ package com.demo.sky.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.demo.sky.dao.SetmealDish;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,13 +27,13 @@ public interface SetmealDishMapper extends BaseMapper<SetmealDish> {
      * @param setmealId
      * @return 删除记录数
      */
-    int deleteBySetmealId(@Param("setmealId") Long setmealId);
+    int deleteBySetmealId(Long setmealId);
 
     /**
      * 根据套餐信息查询菜品信息
      * @param setmealId
      * @return 菜品信息列表
      */
-    List<SetmealDish> getBySetmealId(@Param("setmealId") Long setmealId);
+    List<SetmealDish> getBySetmealId(Long setmealId);
 
 }

@@ -65,5 +65,5 @@ public interface OrderMapper extends BaseMapper<Orders> {
      * @param ordersPageQueryDTO
      * @return
      */
-    IPage<Orders> pageQuery(Page<Orders> page, @Param("query") OrdersPageQueryDTO ordersPageQueryDTO);
+    IPage<Orders> pageOrder(Page<Orders> page, OrdersPageQueryDTO ordersPageQueryDTO);
 }

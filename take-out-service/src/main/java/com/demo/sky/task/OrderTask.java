@@ -37,7 +37,7 @@ public class OrderTask {
                 orders.setStatus(Orders.CANCELLED);
                 orders.setCancelReason("支付超时，自动取消");
                 orders.setCancelTime(LocalDateTime.now());
-                orderMapper.update(orders);
+                orderMapper.updateById(orders);
             });
         }
     }
@@ -56,7 +56,7 @@ public class OrderTask {
         if (ordersList != null && ordersList.size() > 0) {
             ordersList.forEach(orders -> {
                 orders.setStatus(Orders.COMPLETED);
-                orderMapper.update(orders);
+                orderMapper.updateById(orders);
             });
         }
     }

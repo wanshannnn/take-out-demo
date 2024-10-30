@@ -97,7 +97,7 @@ public class EmployeeController {
     @Operation(summary = "员工分页查询")
     public Result<Page<Employee>> page(EmployeePageQueryDTO employeePageQueryDTO) {
         log.info("员工分页查询，参数为：{}", employeePageQueryDTO);
-        Page<Employee> pageResult = employeeService.pageQuery(employeePageQueryDTO);
+        Page<Employee> pageResult = (Page<Employee>) employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
     }
 

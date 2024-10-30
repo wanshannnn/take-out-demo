@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.demo.sky.dto.EmployeePageQueryDTO;
 import com.demo.sky.dao.Employee;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface EmployeeMapper extends BaseMapper<Employee> {
@@ -16,7 +15,7 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
      * @param username
      * @return
      */
-    Employee getByUsername(@Param("username") String username);
+    Employee getByUsername(String username);
 
     /**
      * 员工分页查询
@@ -24,6 +23,6 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
      * @param employeePageQueryDTO 查询条件
      * @return
      */
-    IPage<Employee> pageEmployee(Page<Employee> page, @Param("query") EmployeePageQueryDTO employeePageQueryDTO);
+    IPage<Employee> pageEmployee(Page<Employee> page, EmployeePageQueryDTO employeePageQueryDTO);
 
 }

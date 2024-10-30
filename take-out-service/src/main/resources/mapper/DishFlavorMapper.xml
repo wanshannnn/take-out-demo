@@ -10,11 +10,14 @@
              </foreach>
     </insert>
 
-    <select id="pageQuery" resultType="com.demo.sky.vo.DishVO">
-        SELECT * FROM dish
-        WHERE category_id = #{dto.categoryId}
-          AND status = #{dto.status}
-        ORDER BY create_time DESC
-    </select>
+    <delete id="deleteByDishId">
+        delete
+        from dish_flavor
+        where dish_id =#{dishId} ;
+    </delete>
 
+    <select id="getByDishId" resultType="com.demo.sky.dao.DishFlavor">
+        select *
+        from dish_flavor where dish_id=#{dishId};
+    </select>
 </mapper>

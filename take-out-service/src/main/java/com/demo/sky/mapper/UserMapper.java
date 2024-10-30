@@ -17,7 +17,7 @@ public interface UserMapper extends BaseMapper<User> {
      * @param openid
      * @return
      */
-    User getByOpenId(@Param("openid") String openid);
+    User getByOpenId(String openid);
 
     /**
      * 根据动态条件统计用户数量

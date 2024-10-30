@@ -3,7 +3,6 @@ package com.demo.sky.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.demo.sky.annotation.AutoFill;
 import com.demo.sky.constant.MessageConstant;
 import com.demo.sky.constant.PasswordConstant;
 import com.demo.sky.constant.StatusConstant;

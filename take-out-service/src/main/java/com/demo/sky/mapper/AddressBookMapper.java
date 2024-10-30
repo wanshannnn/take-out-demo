@@ -22,5 +22,5 @@ public interface AddressBookMapper extends BaseMapper<AddressBook> {
      * @param userId 用户ID
      */
     @Update("UPDATE address_book SET is_default = 0 WHERE user_id = #{userId} AND is_default = 1")
-    void updateIsDefaultByUserId(@Param("userId") Long userId);
+    void updateIsDefaultByUserId(Long userId);
 }

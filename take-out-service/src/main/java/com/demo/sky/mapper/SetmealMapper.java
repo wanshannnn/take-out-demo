@@ -8,7 +8,6 @@ import com.demo.sky.dto.SetmealPageQueryDTO;
 import com.demo.sky.vo.DishItemVO;
 import com.demo.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,7 @@ public interface SetmealMapper extends BaseMapper<Setmeal> {
      * @param categoryId
      * @return
      */
-    Integer countByCategoryId(@Param("categoryId") Long categoryId);
+    Integer countByCategoryId(Long categoryId);
 
     /**
      * 条件查询
@@ -42,13 +41,13 @@ public interface SetmealMapper extends BaseMapper<Setmeal> {
      * @param setmealPageQueryDTO
      * @return
      */
-    IPage<SetmealVO> pageQuery(Page<SetmealVO> page, @Param("query") SetmealPageQueryDTO setmealPageQueryDTO);
+    IPage<SetmealVO> pageSetmeal(Page<SetmealVO> page, SetmealPageQueryDTO setmealPageQueryDTO);
 
     /**
      * 根据套餐 ID 查询菜品选项
      * @param setmealId 套餐 ID
      * @return 菜品选项列表
      */
-    List<DishItemVO> getDishItemBySetmealId(@Param("setmealId") Long setmealId);
+    List<DishItemVO> getDishItemBySetmealId(Long setmealId);
 
 }
