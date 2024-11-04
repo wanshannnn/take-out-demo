@@ -11,7 +11,6 @@ import com.demo.sky.vo.UserLoginVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,11 +27,13 @@ import java.util.HashMap;
 @Slf4j
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final JwtProperties jwtProperties;
 
-    @Autowired
-    private JwtProperties jwtProperties;
+    public UserController(UserService userService, JwtProperties jwtProperties) {
+        this.userService = userService;
+        this.jwtProperties = jwtProperties;
+    }
 
     /**
      * 微信登录

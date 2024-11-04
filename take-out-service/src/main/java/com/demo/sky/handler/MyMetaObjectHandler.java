@@ -23,7 +23,6 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.strictUpdateFill(metaObject, "updateUser", Long.class, getCurrentUserId());
     }
 
-    // 获取当前用户 ID 的方法（需要自定义实现）
     private Long getCurrentUserId() {
         return BaseContext.getCurrentId();
     }

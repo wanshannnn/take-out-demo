@@ -6,7 +6,6 @@ import com.demo.sky.result.Result;
 import com.demo.sky.service.AddressBookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +15,11 @@ import java.util.List;
 @Tag(name = "C端-地址簿接口")
 public class AddressBookController {
 
-    @Autowired
-    private AddressBookService addressBookService;
+    private final AddressBookService addressBookService;
+
+    public AddressBookController(AddressBookService addressBookService) {
+        this.addressBookService = addressBookService;
+    }
 
     /**
      * 查询当前登录用户的所有地址信息

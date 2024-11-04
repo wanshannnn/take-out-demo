@@ -46,18 +46,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
      */
     public void save(CategoryDTO categoryDTO) {
         Category category = new Category();
-        //属性拷贝
         BeanUtils.copyProperties(categoryDTO, category);
-
-        //分类状态默认为禁用状态0
-        category.setStatus(StatusConstant.DISABLE);
-
-        //设置创建时间、修改时间、创建人、修改人
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
-        category.setCreateUser(BaseContext.getCurrentId());
-        category.setUpdateUser(BaseContext.getCurrentId());
-
+        category.setStatus(StatusConstant.DISABLE); // 分类状态默认为禁用状态0
         this.save(category);
     }
 
@@ -69,7 +59,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public IPage<Category> pageQuery(CategoryPageQueryDTO categoryPageQueryDTO) {
         Page<Category> page = new Page<>(categoryPageQueryDTO.getPage(), categoryPageQueryDTO.getPageSize());
         IPage<Category> categoryPage = categoryMapper.pageCategory(page, categoryPageQueryDTO);
-
         return categoryPage;
     }
 
@@ -102,11 +91,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public void update(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO,category);
-
-        // 设置修改时间、修改人
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
-
         this.updateById(category);
     }
 
@@ -118,9 +102,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public void startOrStop(Integer status, Long id) {
         LambdaUpdateWrapper<Category> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(Category::getId, id)
-                .set(Category::getStatus, status)
-                .set(Category::getUpdateTime, LocalDateTime.now())
-                .set(Category::getUpdateUser, BaseContext.getCurrentId());
+                .set(Category::getStatus, status);
         categoryMapper.update(updateWrapper);
     }
 

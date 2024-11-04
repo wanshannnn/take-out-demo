@@ -14,7 +14,6 @@ import com.demo.sky.vo.EmployeeLoginVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -29,10 +28,13 @@ import java.util.Map;
 @Tag(name = "员工相关接口")
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeService employeeService;
-    @Autowired
-    private JwtProperties jwtProperties;
+    private final EmployeeService employeeService;
+    private final JwtProperties jwtProperties;
+
+    public EmployeeController(EmployeeService employeeService, JwtProperties jwtProperties) {
+        this.employeeService = employeeService;
+        this.jwtProperties = jwtProperties;
+    }
 
     /**
      * 登录

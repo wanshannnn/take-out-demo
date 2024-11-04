@@ -50,6 +50,13 @@ public interface DishService extends IService<Dish> {
     List<Dish> list(Long categoryId);
 
     /**
+     * 缓存数据库中查询菜品和口味
+     * @param categoryId
+     * @return
+     */
+    List<DishVO> listWithFlavorByCategory(Long categoryId);
+
+    /**
      * 条件查询菜品和口味
      * @param dish
      * @return

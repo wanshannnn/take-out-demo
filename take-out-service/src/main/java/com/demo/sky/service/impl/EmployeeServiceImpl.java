@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.demo.sky.constant.MessageConstant;
 import com.demo.sky.constant.PasswordConstant;
 import com.demo.sky.constant.StatusConstant;
-import com.demo.sky.context.BaseContext;
 import com.demo.sky.dto.EmployeeDTO;
 import com.demo.sky.dto.EmployeeLoginDTO;
 import com.demo.sky.dto.EmployeePageQueryDTO;
@@ -19,8 +18,6 @@ import com.demo.sky.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-
-import java.time.LocalDateTime;
 
 @Service
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
@@ -73,28 +70,12 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     @Override
     public void save(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
-
-        //对象属性拷贝
         BeanUtils.copyProperties(employeeDTO, employee);
-
         //设置账号的状态，默认正常状态 1表示正常 0表示锁定
         employee.setStatus(StatusConstant.ENABLE);
-
         //设置密码，默认密码123456
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
-
-        //设置当前记录的创建时间和修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-
-        //通过ThreadLocal获取用户信息
-        Long currentId = BaseContext.getCurrentId();
-
-        //设置当前记录创建人id和修改人id
-        employee.setCreateUser(currentId);//目前写个假数据，后期修改
-        employee.setUpdateUser(currentId);
-
-        employeeMapper.insert(employee);//后续步骤定义
+        employeeMapper.insert(employee);
     }
 
     /**
@@ -142,9 +123,6 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     public void update(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
-
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
         employeeMapper.updateById(employee);
     }
 

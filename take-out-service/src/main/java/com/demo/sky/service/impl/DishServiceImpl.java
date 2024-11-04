@@ -1,13 +1,11 @@
 package com.demo.sky.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.demo.sky.constant.MessageConstant;
 import com.demo.sky.constant.StatusConstant;
-import com.demo.sky.dao.SetmealDish;
 import com.demo.sky.dto.DishDTO;
 import com.demo.sky.dto.DishPageQueryDTO;
 import com.demo.sky.dao.Dish;
@@ -22,12 +20,14 @@ import com.demo.sky.result.PageResult;
 import com.demo.sky.service.DishService;
 import com.demo.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements DishService {
@@ -52,6 +52,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      */
     @Override
     @Transactional
+    @CacheEvict(value = "dishCache", key = "#dishDTO.categoryId")
     public void saveWithFlavor(DishDTO dishDTO) {
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishDTO, dish);
@@ -84,6 +85,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      */
     @Override
     @Transactional
+    @CacheEvict(value = "dishCache", key = "#ids")
     public void deleteBatch(List<Long> ids) {
         // 判断当前菜品是否能够删除---是否存在起售中的菜品？？
         ids.forEach(id->{
@@ -132,6 +134,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      * @param dishDTO
      */
     @Override
+    @CacheEvict(value = "dishCache", key = "#dishDTO")
     public void updateWithFlavor(DishDTO dishDTO) {
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishDTO, dish);
@@ -157,32 +160,39 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     }
 
     /**
+     * 缓存数据库中查询菜品
+     * @param categoryId
+     * @return
+     */
+    @Cacheable(value = "dishCache", key = "'dish_' + #categoryId")
+    public List<DishVO> listWithFlavorByCategory(Long categoryId) {
+        Dish dish = new Dish();
+        dish.setCategoryId(categoryId);
+        dish.setStatus(StatusConstant.ENABLE);
+
+        // 查询 MySQL 数据库，获取菜品列表和口味
+        return listWithFlavor(dish);
+    }
+
+    /**
      * 条件查询菜品和口味
      * @param dish
      * @return
      */
     @Override
     public List<DishVO> listWithFlavor(Dish dish) {
-        // 使用 LambdaQueryWrapper 构造查询条件
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId())
                 .eq(dish.getStatus() != null, Dish::getStatus, dish.getStatus());
         List<Dish> dishList = dishMapper.selectList(queryWrapper);
 
-        ArrayList<DishVO> dishVOArrayList = new ArrayList<>();
-
-        dishList.forEach(d->{
+        return dishList.stream().map(d -> {
             DishVO dishVO = new DishVO();
             BeanUtils.copyProperties(d, dishVO);
-
-            // 根据菜品id查询对应的口味
             List<DishFlavor> flavors = dishFlavorMapper.getByDishId(d.getId());
-
             dishVO.setFlavors(flavors);
-            dishVOArrayList.add(dishVO);
-        });
-
-        return dishVOArrayList;
+            return dishVO;
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -192,6 +202,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      */
     @Override
     @Transactional
+    @CacheEvict(value = "dishCache", key = "#id")
     public void startOrStop(Integer status, Long id) {
         Dish dish = Dish.builder()
                 .id(id)

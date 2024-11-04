@@ -7,7 +7,6 @@ import com.demo.sky.service.SetMealService;
 import com.demo.sky.vo.DishItemVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +19,12 @@ import java.util.List;
 @RequestMapping("/user/setmeal")
 @Tag(name = "C端-套餐浏览接口")
 public class SetMealController {
-    @Autowired
-    private SetMealService setMealService;
+
+    private final SetMealService setMealService;
+
+    public SetMealController(SetMealService setMealService) {
+        this.setMealService = setMealService;
+    }
 
     /**
      * 条件查询
