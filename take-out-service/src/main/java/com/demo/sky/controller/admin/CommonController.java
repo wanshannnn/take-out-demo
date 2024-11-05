@@ -1,6 +1,5 @@
 package com.demo.sky.controller.admin;
 
-import com.demo.sky.constant.MessageConstant;
 import com.demo.sky.result.Result;
 import com.demo.sky.utils.AliOssUtil;
 import io.swagger.v3.oas.annotations.Operation;

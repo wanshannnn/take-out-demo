@@ -3,7 +3,6 @@ package com.demo.sky.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.demo.sky.constant.MessageConstant;
 import com.demo.sky.constant.PasswordConstant;
 import com.demo.sky.constant.StatusConstant;
 import com.demo.sky.dto.EmployeeDTO;
@@ -18,6 +17,10 @@ import com.demo.sky.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
@@ -44,19 +47,28 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         //2、处理各种异常情况（用户名不存在、密码不对、账号被锁定）
         if (employee == null) {
             //账号不存在
-            throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            data.put("username", username);
+            throw new AccountNotFoundException(data);
         }
 
         //密码比对
         password = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!password.equals(employee.getPassword())) {
             //密码错误
-            throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            data.put("username", username);
+            throw new PasswordErrorException(data);
         }
 
         if (employee.getStatus() == StatusConstant.DISABLE) {
             //账号被锁定
-            throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            data.put("username", username);
+            throw new AccountLockedException(data);
         }
 
         //3、返回实体对象

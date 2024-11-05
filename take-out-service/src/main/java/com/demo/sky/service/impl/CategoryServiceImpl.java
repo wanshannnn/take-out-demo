@@ -5,12 +5,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.demo.sky.constant.MessageConstant;
 import com.demo.sky.constant.StatusConstant;
 import com.demo.sky.dto.CategoryDTO;
 import com.demo.sky.dto.CategoryPageQueryDTO;
 import com.demo.sky.dao.Category;
 import com.demo.sky.exception.DeletionNotAllowedException;
+import com.demo.sky.exception.ErrorCode;
 import com.demo.sky.mapper.CategoryMapper;
 import com.demo.sky.mapper.DishMapper;
 import com.demo.sky.mapper.SetmealMapper;
@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -65,18 +67,25 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
      * @param id
      */
     public void deleteById(Long id) {
+
         //查询当前分类是否关联了菜品，如果关联了就抛出业务异常
         Integer count = dishMapper.countByCategoryId(id);
         if(count > 0){
             //当前分类下有菜品，不能删除
-            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("category_id", id);
+            data.put("timestamp", LocalDateTime.now());
+            throw new DeletionNotAllowedException(ErrorCode.CATEGORY_BE_RELATED_BY_DISH, data);
         }
 
         //查询当前分类是否关联了套餐，如果关联了就抛出业务异常
         count = setmealMapper.countByCategoryId(id);
         if(count > 0){
             //当前分类下有菜品，不能删除
-            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("category_id", id);
+            data.put("timestamp", LocalDateTime.now());
+            throw new DeletionNotAllowedException(ErrorCode.CATEGORY_BE_RELATED_BY_SETMEAL,data);
         }
 
         this.removeById(id);

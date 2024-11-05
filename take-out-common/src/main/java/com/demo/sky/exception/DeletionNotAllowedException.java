@@ -1,9 +1,11 @@
 package com.demo.sky.exception;
 
+import java.util.Map;
+
 public class DeletionNotAllowedException extends BaseException {
 
-    public DeletionNotAllowedException(String msg) {
-        super(msg);
+    public DeletionNotAllowedException(ErrorCode errorCode, Map<String, Object> data) {
+        super(errorCode, data);
     }
 
 }

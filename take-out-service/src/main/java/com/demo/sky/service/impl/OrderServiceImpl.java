@@ -6,11 +6,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.demo.sky.constant.MessageConstant;
 import com.demo.sky.context.BaseContext;
 import com.demo.sky.dto.*;
 import com.demo.sky.dao.*;
 import com.demo.sky.exception.AddressBookBusinessException;
+import com.demo.sky.exception.ErrorCode;
 import com.demo.sky.exception.OrderBusinessException;
 import com.demo.sky.exception.ShoppingCartBusinessException;
 import com.demo.sky.mapper.*;
@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,7 +82,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         // 异常情况的处理（收货地址为空、超出配送氛围、购物车为空）
         AddressBook addressBook = addressBookMapper.selectById(ordersSubmitDTO.getAddressBookId());
         if (addressBook == null) {
-            throw new AddressBookBusinessException(MessageConstant.ADDRESS_BOOK_IS_NULL);
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            throw new AddressBookBusinessException(data);
         }
 
         // 检查用户的收货地址是否超出配送范围
@@ -96,7 +99,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         // 询当前用户的购物车数据
         List<ShoppingCart> shoppingCartList = shoppingCartMapper.list(shoppingCart);
         if (shoppingCartList == null || shoppingCartList.size() == 0) {
-            throw new ShoppingCartBusinessException(MessageConstant.SHOPPING_CART_IS_NULL);
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            data.put("userId", currentId);
+            throw new ShoppingCartBusinessException(data);
         }
 
         // 构造订单数据
@@ -156,12 +162,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         JSONObject jsonObject = weChatPayUtil.pay(
                 ordersPaymentDTO.getOrderNumber(),
                 orders.getAmount(),
-                "苍穹外卖订单" + orders.getId(),
+                "外卖订单" + orders.getId(),
                 user.getOpenid()
         );
 
         if (jsonObject.getString("code") != null && jsonObject.getString("code").equals("ORDERPAID")) {
-            throw new OrderBusinessException("该订单已支付");
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            throw new OrderBusinessException(ErrorCode.ORDER_ALREADY_PAID, data);
         }
 
         OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
@@ -270,12 +278,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 
         // 校验订单是否存在
         if (orderDB == null) {
-            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            data.put("orderId", orderDB.getId());
+            throw new OrderBusinessException(ErrorCode.ORDER_NOT_FOUND, data);
         }
 
         // 订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
         if (orderDB.getStatus() > 2) {
-            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            data.put("orderId", orderDB.getId());
+            data.put("status", orderDB.getStatus());
+            throw new OrderBusinessException(ErrorCode.ORDER_STATUS_ERROR, data);
         }
 
         Orders orders = new Orders();
@@ -387,7 +402,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 
         // 订单只有存在且状态为2（待接单）才可以拒单
         if (ordersDB == null || !ordersDB.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
-            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            data.put("orderId", ordersDB.getId());
+            data.put("status", ordersDB.getStatus());
+            throw new OrderBusinessException(ErrorCode.ORDER_STATUS_ERROR, data);
         }
 
         // 支付状态
@@ -454,7 +473,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 
         // 校验订单是否存在，并且状态为3
         if (orderDB == null || !orderDB.getStatus().equals(Orders.CONFIRMED)) {
-            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            data.put("orderId", orderDB.getId());
+            data.put("status", orderDB.getStatus());
+            throw new OrderBusinessException(ErrorCode.ORDER_STATUS_ERROR, data);
         }
 
         Orders orders = new Orders();
@@ -476,7 +499,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 
         // 校验订单是否存在，并且状态为4
         if (orderDB == null || !orderDB.getStatus().equals(Orders.DELIVERY_IN_PROGRESS)) {
-            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            data.put("orderId", orderDB.getId());
+            data.put("status", orderDB.getStatus());
+            throw new OrderBusinessException(ErrorCode.ORDER_STATUS_ERROR, data);
         }
 
         Orders orders = new Orders();
@@ -497,7 +524,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     public void reminder(Long id) {
         Orders orders = orderMapper.selectById(id);
         if (orders == null) {
-            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            data.put("orderId", orders.getId());
+            throw new OrderBusinessException(ErrorCode.ORDER_NOT_FOUND, data);
         }
 
         // 基于WebSocket实现催单
@@ -562,7 +592,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 
         JSONObject jsonObject = JSON.parseObject(shopCoordinate);
         if (!jsonObject.getString("status").equals("0")) {
-            throw new OrderBusinessException("店铺地址解析失败");
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            throw new OrderBusinessException(ErrorCode.SHOP_ADDRESS_ANALYSIS_FAILED, data);
         }
 
         // 数据解析
@@ -595,7 +627,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 
         jsonObject = JSON.parseObject(json);
         if (!jsonObject.getString("status").equals("0")) {
-            throw new OrderBusinessException("配送线路规划失败");
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            throw new OrderBusinessException(ErrorCode.DISTRIBUTION_ROUTE_FAILED, data);
         }
 
         // 数据解析
@@ -605,7 +639,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 
         if(distance > 5000){
             //配送距离超过5000米
-            throw new OrderBusinessException("超出配送范围");
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            throw new OrderBusinessException(ErrorCode.OUT_OF_DISTRIBUTION_RANGE, data);
         }
     }
 }

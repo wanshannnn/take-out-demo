@@ -3,7 +3,6 @@ package com.demo.sky.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.demo.sky.constant.MessageConstant;
 import com.demo.sky.constant.StatusConstant;
 import com.demo.sky.dao.Dish;
 import com.demo.sky.dao.Setmeal;
@@ -11,6 +10,7 @@ import com.demo.sky.dao.SetmealDish;
 import com.demo.sky.dto.SetmealDTO;
 import com.demo.sky.dto.SetmealPageQueryDTO;
 import com.demo.sky.exception.DeletionNotAllowedException;
+import com.demo.sky.exception.ErrorCode;
 import com.demo.sky.exception.SetmealEnableFailedException;
 import com.demo.sky.mapper.DishMapper;
 import com.demo.sky.mapper.SetmealDishMapper;
@@ -24,7 +24,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -91,7 +94,9 @@ public class SetMealServiceImpl extends ServiceImpl<SetmealDishMapper, SetmealDi
         ids.forEach(id -> {
             Setmeal setmeal = setmealMapper.selectById(id);
             if (StatusConstant.ENABLE == setmeal.getStatus()) {
-                throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
+                Map<String, Object> data = new HashMap<>();
+                data.put("timestamp", LocalDateTime.now());
+                throw new DeletionNotAllowedException(ErrorCode.SETMEAL_ON_SALE, data);
             }
         });
 
@@ -166,7 +171,9 @@ public class SetMealServiceImpl extends ServiceImpl<SetmealDishMapper, SetmealDi
             if (dishList != null && dishList.size() > 0) {
                 dishList.forEach(dish -> {
                     if (StatusConstant.DISABLE == dish.getStatus()) { // 有停售商品
-                        throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("timestamp", LocalDateTime.now());
+                        throw new SetmealEnableFailedException(data);
                     }
                 });
             }

@@ -45,10 +45,10 @@ public class UserController {
     public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO) {
         log.info("微信用户登录：{}",userLoginDTO.getCode());
 
-//        微信登录
+        // 微信登录
         User user = userService.wxLogin(userLoginDTO);
 
-//        为微信用户生成jwt令牌
+        // 为微信用户生成jwt令牌
         HashMap<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID, user.getId());
         String token = JwtUtil.createJWT(jwtProperties.getUserSecretKey(), jwtProperties.getUserTtl(), claims);

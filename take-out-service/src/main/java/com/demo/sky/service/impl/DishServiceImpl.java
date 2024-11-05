@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.demo.sky.constant.MessageConstant;
 import com.demo.sky.constant.StatusConstant;
 import com.demo.sky.dto.DishDTO;
 import com.demo.sky.dto.DishPageQueryDTO;
@@ -12,6 +11,7 @@ import com.demo.sky.dao.Dish;
 import com.demo.sky.dao.DishFlavor;
 import com.demo.sky.dao.Setmeal;
 import com.demo.sky.exception.DeletionNotAllowedException;
+import com.demo.sky.exception.ErrorCode;
 import com.demo.sky.mapper.DishFlavorMapper;
 import com.demo.sky.mapper.DishMapper;
 import com.demo.sky.mapper.SetmealDishMapper;
@@ -26,7 +26,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,19 +91,25 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     @Transactional
     @CacheEvict(allEntries = true)
     public void deleteBatch(List<Long> ids) {
+
         // 判断当前菜品是否能够删除---是否存在起售中的菜品？？
         ids.forEach(id->{
             Dish dish = dishMapper.selectById(id);
             if (dish.getStatus() == StatusConstant.ENABLE) {
                 // 当前菜品处于起售中，不能删除
-                throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("category_id", id);
+                data.put("timestamp", LocalDateTime.now());
+                throw new DeletionNotAllowedException(ErrorCode.DISH_ON_SALE, data);
             }
         });
         // 判断当前菜品是否能够删除---是否被套餐关联了？？
         List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishIds(ids);
         if (setmealIds != null && setmealIds.size() > 0) {
             // 当前菜品被套餐关联了，不能删除
-            throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("timestamp", LocalDateTime.now());
+            throw new DeletionNotAllowedException(ErrorCode.DISH_BE_RELATED_BY_SETMEAL, data);
         }
         // 删除菜品表中的菜品数据
         ids.forEach(id->{

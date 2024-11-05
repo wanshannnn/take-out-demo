@@ -1,6 +1,5 @@
 package com.demo.sky.handler;
 
-import com.demo.sky.constant.MessageConstant;
 import com.demo.sky.exception.BaseException;
 import com.demo.sky.result.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +33,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     public Result exceptionHandler(SQLIntegrityConstraintViolationException ex){
-        //Duplicate entry 'zhangsan' for key 'employee.idx_username'
         String message = ex.getMessage();
         if(message.contains("Duplicate entry")){
             String[] split = message.split(" ");

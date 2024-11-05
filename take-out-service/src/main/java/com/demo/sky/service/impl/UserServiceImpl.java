@@ -2,7 +2,6 @@ package com.demo.sky.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.demo.sky.constant.MessageConstant;
 import com.demo.sky.dto.UserLoginDTO;
 import com.demo.sky.dao.User;
 import com.demo.sky.exception.LoginFailedException;
@@ -13,6 +12,7 @@ import com.demo.sky.utils.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,9 +40,12 @@ public class UserServiceImpl implements UserService {
         // 调用微信接口服务，获取当前微信用户的Openid
         String openid = getOpenid(userLoginDTO.getCode());
 
+        Map<String, Object> data = new HashMap<>();
+        data.put("timestamp", LocalDateTime.now());
+
         // 判断openId是否为空，如果为空标识登录失败，抛出业务异常
         if (openid == null) {
-            throw new LoginFailedException(MessageConstant.LOGIN_FAILED);
+            throw new LoginFailedException(data);
         }
 
         // 判断当前用户是否为新用户
