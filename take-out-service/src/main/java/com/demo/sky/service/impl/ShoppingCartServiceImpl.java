@@ -103,7 +103,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
             // 解析商品ID和类型
             String[] parts = field.split(":");
-            if (parts[0] == "dish") {
+            if ("dish".equals(parts[0])) {
                 Long dishId = Long.parseLong(parts[1]);
                 ShoppingCart cart = shoppingCartMapper.selectById(dishId);
                 shoppingCarts.add(cart);

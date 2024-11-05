@@ -20,6 +20,7 @@ import com.demo.sky.result.PageResult;
 import com.demo.sky.service.DishService;
 import com.demo.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@CacheConfig(cacheNames = "dishCache")
 public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements DishService {
 
     private final DishMapper dishMapper;
@@ -52,7 +54,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      */
     @Override
     @Transactional
-    @CacheEvict(value = "dishCache", key = "#dishDTO.categoryId")
+    @CacheEvict(key = "'dish_id' + #dishDTO.id")
     public void saveWithFlavor(DishDTO dishDTO) {
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishDTO, dish);
@@ -85,7 +87,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      */
     @Override
     @Transactional
-    @CacheEvict(value = "dishCache", key = "#ids")
+    @CacheEvict(allEntries = true)
     public void deleteBatch(List<Long> ids) {
         // 判断当前菜品是否能够删除---是否存在起售中的菜品？？
         ids.forEach(id->{
@@ -117,6 +119,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      * @return
      */
     @Override
+    @Cacheable(key = "'dish_id' + #id")
     public DishVO getByIdWithFlavor(Long id) {
         Dish dish = dishMapper.selectById(id);
         List<DishFlavor> dishFlavorList = dishFlavorMapper.getByDishId(id);
@@ -134,7 +137,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      * @param dishDTO
      */
     @Override
-    @CacheEvict(value = "dishCache", key = "#dishDTO")
+    @CacheEvict(key = "'dish_id' + #dishDTO.id")
     public void updateWithFlavor(DishDTO dishDTO) {
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishDTO, dish);
@@ -155,6 +158,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      * @return
      */
     @Override
+    @Cacheable(key = "'category_id' + #categoryId")
     public List<Dish> list(Long categoryId) {
         return dishMapper.listByCategoryId(categoryId);
     }
@@ -164,7 +168,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      * @param categoryId
      * @return
      */
-    @Cacheable(value = "dishCache", key = "'dish_' + #categoryId")
+    @Cacheable(key = "'category_id' + #categoryId")
     public List<DishVO> listWithFlavorByCategory(Long categoryId) {
         Dish dish = new Dish();
         dish.setCategoryId(categoryId);
@@ -202,7 +206,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      */
     @Override
     @Transactional
-    @CacheEvict(value = "dishCache", key = "#id")
+    @CacheEvict(allEntries = true)
     public void startOrStop(Integer status, Long id) {
         Dish dish = Dish.builder()
                 .id(id)
