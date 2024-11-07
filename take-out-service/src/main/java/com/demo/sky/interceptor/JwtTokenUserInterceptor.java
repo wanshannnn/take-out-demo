@@ -21,8 +21,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Slf4j
 public class JwtTokenUserInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    private JwtProperties jwtProperties;
+    private final JwtProperties jwtProperties;
+
+    public JwtTokenUserInterceptor(JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
+    }
 
     /**
      * 校验jwt
