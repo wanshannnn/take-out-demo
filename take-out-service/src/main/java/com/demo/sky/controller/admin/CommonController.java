@@ -1,5 +1,6 @@
 package com.demo.sky.controller.admin;
 
+import com.demo.sky.exception.ErrorCode;
 import com.demo.sky.result.Result;
 import com.demo.sky.utils.AliOssUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,7 +51,7 @@ public class CommonController {
             log.error("文件删除失败：{}", e);
         }
 
-        return Result.error(MessageConstant.UPLOAD_FAILED);
+        return Result.error(String.valueOf(ErrorCode.UPLOAD_FAILED));
     }
 
 }

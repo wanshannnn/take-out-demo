@@ -3,7 +3,6 @@ package com.demo.sky.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.demo.sky.dao.ShoppingCart;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 

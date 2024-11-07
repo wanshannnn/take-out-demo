@@ -1,11 +1,8 @@
 package com.demo.sky.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.demo.sky.annotation.AutoFill;
 import com.demo.sky.dao.User;
-import com.demo.sky.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.Map;
 

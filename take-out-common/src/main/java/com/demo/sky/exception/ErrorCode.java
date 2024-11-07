@@ -28,9 +28,7 @@ public enum ErrorCode {
     OUT_OF_DISTRIBUTION_RANGE(400, HttpStatus.BAD_REQUEST, "超出配送范围");
 
     private final int code;
-
     private final HttpStatus status;
-
     private final String message;
 
     ErrorCode(int code, HttpStatus status, String message) {

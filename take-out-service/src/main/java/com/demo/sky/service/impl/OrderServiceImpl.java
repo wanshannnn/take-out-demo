@@ -638,7 +638,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         Integer distance = (Integer) ((JSONObject) jsonArray.get(0)).get("distance");
 
         if(distance > 5000){
-            //配送距离超过5000米
+            // 配送距离超过5000米
             Map<String, Object> data = new HashMap<>();
             data.put("timestamp", LocalDateTime.now());
             throw new OrderBusinessException(ErrorCode.OUT_OF_DISTRIBUTION_RANGE, data);

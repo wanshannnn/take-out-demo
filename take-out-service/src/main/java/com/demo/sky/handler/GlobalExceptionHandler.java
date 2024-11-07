@@ -1,17 +1,23 @@
 package com.demo.sky.handler;
 
 import com.demo.sky.exception.BaseException;
+import com.demo.sky.exception.ErrorCode;
+import com.demo.sky.exception.ErrorReponse;
 import com.demo.sky.result.Result;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import org.springframework.web.bind.annotation.ResponseBody;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * 全局异常处理器，处理项目中抛出的业务异常
  */
-@RestControllerAdvice
+@ControllerAdvice
+@ResponseBody
 @Slf4j
 public class GlobalExceptionHandler {
 
@@ -20,10 +26,10 @@ public class GlobalExceptionHandler {
      * @param ex
      * @return
      */
-    @ExceptionHandler
-    public Result exceptionHandler(BaseException ex){
-        log.error("异常信息：{}", ex.getMessage());
-        return Result.error(ex.getMessage());
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<?> handleAppException(BaseException ex, HttpServletRequest request) {
+        ErrorReponse representation = new ErrorReponse(ex, request.getRequestURI());
+        return new ResponseEntity<>(representation, new HttpHeaders(), ex.getErrorCode().getStatus());
     }
 
     /**
@@ -37,10 +43,11 @@ public class GlobalExceptionHandler {
         if(message.contains("Duplicate entry")){
             String[] split = message.split(" ");
             String username = split[2];
-            String msg = username + MessageConstant.ALREADY_EXISTS;
+            String msg = username + ErrorCode.ALREADY_EXISTS;
             return Result.error(msg);
         }else{
-            return Result.error(MessageConstant.UNKNOWN_ERROR);
+            String msg = message + ErrorCode.UNKNOWN_ERROR;
+            return Result.error(msg);
         }
     }
 
