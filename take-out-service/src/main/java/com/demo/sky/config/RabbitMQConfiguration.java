@@ -1,34 +1,49 @@
 package com.demo.sky.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.CustomExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Map;
 
 @Configuration
 public class RabbitMQConfiguration {
 
-    public static final String DELAY_EXCHANGE = "order.delay.exchange";
-    public static final String DELAY_QUEUE = "order.delay.queue";
-    public static final String ROUTING_KEY = "order.delay.routingKey";
+    // 支付超时交换机和队列
+    public static final String PAYMENT_TIMEOUT_EXCHANGE = "order.payment.timeout.exchange";
+    public static final String PAYMENT_TIMEOUT_QUEUE = "order.payment.timeout.queue";
+    public static final String PAYMENT_TIMEOUT_ROUTING_KEY = "order.payment.timeout";
+
+    // 派送超时交换机和队列
+    public static final String DELIVERY_TIMEOUT_EXCHANGE = "order.delivery.timeout.exchange";
+    public static final String DELIVERY_TIMEOUT_QUEUE = "order.delivery.timeout.queue";
+    public static final String DELIVERY_TIMEOUT_ROUTING_KEY = "order.delivery.timeout";
 
     @Bean
-    public CustomExchange delayExchange() {
-        return new CustomExchange(DELAY_EXCHANGE, "x-delayed-message", true, false,
-                Map.of("x-delayed-type", "direct"));
+    public DirectExchange paymentTimeoutExchange() {
+        return new DirectExchange(PAYMENT_TIMEOUT_EXCHANGE);
     }
 
     @Bean
-    public Queue delayQueue() {
-        return new Queue(DELAY_QUEUE, true);
+    public Queue paymentTimeoutQueue() {
+        return QueueBuilder.durable(PAYMENT_TIMEOUT_QUEUE).build();
     }
 
     @Bean
-    public Binding delayBinding(Queue delayQueue, CustomExchange delayExchange) {
-        return BindingBuilder.bind(delayQueue).to(delayExchange).with(ROUTING_KEY).noargs();
+    public Binding paymentTimeoutBinding() {
+        return BindingBuilder.bind(paymentTimeoutQueue()).to(paymentTimeoutExchange()).with(PAYMENT_TIMEOUT_ROUTING_KEY);
+    }
+
+    @Bean
+    public DirectExchange deliveryTimeoutExchange() {
+        return new DirectExchange(DELIVERY_TIMEOUT_EXCHANGE);
+    }
+
+    @Bean
+    public Queue deliveryTimeoutQueue() {
+        return QueueBuilder.durable(DELIVERY_TIMEOUT_QUEUE).build();
+    }
+
+    @Bean
+    public Binding deliveryTimeoutBinding() {
+        return BindingBuilder.bind(deliveryTimeoutQueue()).to(deliveryTimeoutExchange()).with(DELIVERY_TIMEOUT_ROUTING_KEY);
     }
 }

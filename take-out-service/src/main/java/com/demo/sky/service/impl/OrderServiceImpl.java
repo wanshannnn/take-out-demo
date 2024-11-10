@@ -14,6 +14,7 @@ import com.demo.sky.exception.ErrorCode;
 import com.demo.sky.exception.OrderBusinessException;
 import com.demo.sky.exception.ShoppingCartBusinessException;
 import com.demo.sky.mapper.*;
+import com.demo.sky.rabbitmq.RabbitMQProducer;
 import com.demo.sky.result.PageResult;
 import com.demo.sky.service.OrderService;
 import com.demo.sky.utils.HttpClientUtil;
@@ -47,6 +48,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     private final UserMapper userMapper;
     private final WeChatPayUtil weChatPayUtil;
     private final WebSocketServer webSocketServer;
+    private final RabbitMQProducer rabbitMQProducer;
 
     public OrderServiceImpl(OrderMapper orderMapper,
                             OrderDetailMapper orderDetailMapper,
@@ -54,7 +56,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
                             AddressBookMapper addressBookMapper,
                             UserMapper userMapper,
                             WeChatPayUtil weChatPayUtil,
-                            WebSocketServer webSocketServer) {
+                            WebSocketServer webSocketServer,
+                            RabbitMQProducer rabbitMQProducer) {
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
         this.shoppingCartMapper = shoppingCartMapper;
@@ -62,6 +65,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         this.userMapper = userMapper;
         this.weChatPayUtil = weChatPayUtil;
         this.webSocketServer = webSocketServer;
+        this.rabbitMQProducer = rabbitMQProducer;
     }
 
 
@@ -117,6 +121,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         order.setPayStatus(Orders.UN_PAID);
         order.setOrderTime(LocalDateTime.now());
         orderMapper.insert(order);
+
+        // 将订单创建同步到消息队列，用于判断支付是否超时
+        rabbitMQProducer.createOrder(order);
 
         // 订单明细数据
         ArrayList<OrderDetail> orderDetailList = new ArrayList<>();
@@ -482,11 +489,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 
         Orders orders = new Orders();
         orders.setId(orderDB.getId());
-
-        // 更新订单状态，状态转为派送中
         orders.setStatus(Orders.DELIVERY_IN_PROGRESS);
-
         orderMapper.updateById(orders);
+
+        // 开始派送时将状态同步到消息队列
+        rabbitMQProducer.updateOrderStatusToDeliveryInProgress(id);
     }
 
     /**
