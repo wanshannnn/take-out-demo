@@ -17,13 +17,13 @@ import com.demo.sky.mapper.*;
 import com.demo.sky.rabbitmq.RabbitMQProducer;
 import com.demo.sky.result.PageResult;
 import com.demo.sky.service.OrderService;
+import com.demo.sky.websocket.WebSocketServer;
 import com.demo.sky.utils.HttpClientUtil;
 import com.demo.sky.utils.WeChatPayUtil;
 import com.demo.sky.vo.OrderPaymentVO;
 import com.demo.sky.vo.OrderStatisticsVO;
 import com.demo.sky.vo.OrderSubmitVO;
 import com.demo.sky.vo.OrderVO;
-import com.demo.sky.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,8 +47,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     private final AddressBookMapper addressBookMapper;
     private final UserMapper userMapper;
     private final WeChatPayUtil weChatPayUtil;
-    private final WebSocketServer webSocketServer;
     private final RabbitMQProducer rabbitMQProducer;
+    private final WebSocketServer webSocketServer;
 
     public OrderServiceImpl(OrderMapper orderMapper,
                             OrderDetailMapper orderDetailMapper,
@@ -56,16 +56,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
                             AddressBookMapper addressBookMapper,
                             UserMapper userMapper,
                             WeChatPayUtil weChatPayUtil,
-                            WebSocketServer webSocketServer,
-                            RabbitMQProducer rabbitMQProducer) {
+                            RabbitMQProducer rabbitMQProducer,
+                            WebSocketServer webSocketServer) {
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
         this.shoppingCartMapper = shoppingCartMapper;
         this.addressBookMapper = addressBookMapper;
         this.userMapper = userMapper;
         this.weChatPayUtil = weChatPayUtil;
-        this.webSocketServer = webSocketServer;
         this.rabbitMQProducer = rabbitMQProducer;
+        this.webSocketServer = webSocketServer;
     }
 
 
