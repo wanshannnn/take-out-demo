@@ -251,7 +251,7 @@ body {
     font-size: 24px;
     font-weight: bold;
     text-align: center;
-    color: #00aaff;
+    color: #f39c12;
     margin-bottom: 20px;
   }
 

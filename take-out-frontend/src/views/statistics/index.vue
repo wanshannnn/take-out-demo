@@ -298,7 +298,7 @@ const handleExport = async () => {
     }
 
     .active {
-      background-color: #22ccff;
+      background-color: #f39c12;
       font-weight: bold;
     }
 

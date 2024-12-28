@@ -277,14 +277,14 @@ const delCheck = (name: any) => {
     }
 
     .act {
-      border-color: #aaeeee !important;
-      color: #33aaff !important;
+      border-color: #8d682e !important;
+      color: #f39c12 !important;
     }
 
     .act::after {
       content: '  ';
       display: inline-block;
-      background-color: #79c9fc;
+      background-color: #bc9c69;
       width: 2px;
       height: 40px;
       position: absolute;

@@ -37,6 +37,7 @@ const options = [
     label: '套餐分类',
   }
 ]
+const isSearch = ref(false)
 
 
 // ------ 方法 ------
@@ -169,7 +170,7 @@ const delete_btn = (row: any) => {
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty description=" 没有数据" />
+        <el-empty description=" 暂无数据" />
       </template>
     </el-table>
 

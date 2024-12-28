@@ -1,11 +1,8 @@
 <!-- 空组件 -->
 <template>
   <div class="empty-box">
-    <div class="img-box">
-      <img v-if="!props.isSearch" src="../assets/image/table_empty.png" alt="">
-      <img v-else src="../assets/image/search_table_empty.png">
-      <p>{{ !props.isSearch ? '这里空空如也~' : 'Sorry，木有找到您搜索的内容哦~' }}</p>
-    </div>
+    <el-empty v-if="!props.isSearch" description="404" />
+    <el-empty v-else description="No Data" />
   </div>
 </template>
 
@@ -20,19 +17,11 @@ const props = defineProps({
 
 <style scoped lang="less">
 .empty-box {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
   margin: 20px 0;
-
-  img {
-    margin: 0 auto;
-    width: 238px;
-    height: 184px;
-    margin-top: 20px;
-    margin-bottom: 26px;
-  }
-
-  p {
-    color: #818693;
-  }
 }
 </style>

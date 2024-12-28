@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import Empty from '@/views/404/index.vue'
 import {
   getOrderDetailPageAPI,
   queryOrderDetailByIdAPI,
@@ -422,7 +421,7 @@ onMounted(async () => {
           </template>
         </el-table-column>
       </el-table>
-      <Empty v-else :is-search="isSearch" />
+      <el-empty v-else :is-search="isSearch" description="暂无数据"/>
       <el-pagination v-if="counts > 10" class="pageList" :page-sizes="[10, 20, 30, 40]" :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper" :total="counts" @size-change="handleSizeChange"
         @current-change="handleCurrentChange" />

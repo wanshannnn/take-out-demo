@@ -12,6 +12,7 @@ const dialogFormVisible = ref(false)
 const dialogStatusVisible = ref(false)
 const formLabelWidth = '80px'
 const isCollapse = ref(false)
+const currentYear = new Date().getFullYear()
 
 const menuList = [
   {
@@ -75,17 +76,17 @@ const rules = { // 表单的规则检验对象
     { required: true, message: '请输入原密码', trigger: 'blur' },
     {
       pattern: /^[a-zA-Z0-9]{1,10}$/,
-      message: '原密码必须是1-10的大小写字母数字',
+      message: '原密码必须是1-10个字符，并且只能包含大小写字母与数字',
       trigger: 'blur'
     }
   ],
   newPwd: [
     { required: true, message: '请输入新密码', trigger: 'blur' },
-    { pattern: /^\S{6,15}$/, message: '新密码必须是6-15的非空字符', trigger: 'blur' }
+    { pattern: /^\S{6,15}$/, message: '新密码必须是6-15个字符的非空字符', trigger: 'blur' }
   ],
   rePwd: [
     { required: true, message: '请再次输入新密码', trigger: 'blur' },
-    { pattern: /^\S{6,15}$/, message: '新密码必须是6-15的非空字符', trigger: 'blur' },
+    { pattern: /^\S{6,15}$/, message: '新密码必须是6-15个字符的非空字符', trigger: 'blur' },
     { validator: samePwd, trigger: 'blur' }
   ]
 }
@@ -232,8 +233,8 @@ const webSocket = () => {
       ElNotification({
         title: jsonMsg.type === 1 ? '待接单' : '催单',
         message: jsonMsg.type === 1
-          ? `<span>您有1个<span style="color:#419EFF">订单待处理</span>,${jsonMsg.content},请及时接单</span>`
-          : `${jsonMsg.content}<span style='color:#419EFF;cursor: pointer'>去处理</span>`,
+          ? `<span>您有1个<span style="color:#f39c12">订单待处理</span>,${jsonMsg.content},请及时接单</span>`
+          : `${jsonMsg.content}<span style='color:#f39c12;cursor: pointer'>去处理</span>`,
         duration: 0,
         dangerouslyUseHTMLString: true,
         onClick: () => {
@@ -350,7 +351,7 @@ onBeforeUnmount(() => {
       <el-container class="box1">
         <!-- 左侧导航菜单区域 -->
         <el-menu :width="isCollapse ? '640px' : '200px'" :default-active="getActiveAside()" :collapse="isCollapse"
-          background-color="#22aaee" text-color="#fff" unique-opened router>
+          background-color="#928a7f" text-color="#fff" unique-opened router>
           <!-- 加了router模式，就会在激活导航时以 :index 作为path进行路径跳转（nb!不用自己写路由了!） -->
           <!-- 根据不同情况选择menu-item/submenu进行遍历，所以外层套template遍历，里面组件做判断看是否该次遍历到自己 -->
           <template v-for="item in menuList" :key="item.path">
@@ -367,7 +368,7 @@ onBeforeUnmount(() => {
           <el-main>
             <router-view></router-view>
           </el-main>
-          <el-footer>© 2024.5.21 hanye-take-out Tech and Fun. All rights reserved.</el-footer>
+          <el-footer>Copyright © {{ currentYear }} take-out-demo.</el-footer>
         </el-container>
       </el-container>
     </el-container>
@@ -381,7 +382,7 @@ onBeforeUnmount(() => {
 }
 
 .el-header {
-  background-color: #00aaff;
+  background-color: #070605;
   color: #ffffff;
   line-height: 60px;
 
@@ -464,14 +465,14 @@ onBeforeUnmount(() => {
 a {
   display: block;
   height: 4rem;
-  color: #334455;
+  color: #5d4a18;
   font-size: 20px;
   font-weight: bold;
   text-decoration: none;
 }
 
 a:hover {
-  background-color: #445566;
+  background-color: #5d4a18;
   color: #eee;
 }
 
@@ -508,7 +509,7 @@ a:hover {
 
   .el-radio__label {
     padding-top: 15px;
-    color: #445588;
+    color: #5d4a18;
     font-weight: 700;
 
     span {
@@ -522,7 +523,7 @@ a:hover {
 
   .el-radio-group {
     &>.is-checked {
-      border: 1px solid #00aaff;
+      border: 1px solid #eebb00;
     }
   }
 
@@ -562,7 +563,7 @@ a:hover {
 
 .el-menu {
   padding: 30px 0 0 0;
-  background-color: #445566;
+  background-color: #4b4533;
 }
 
 .el-menu-item {
@@ -572,7 +573,7 @@ a:hover {
 }
 
 .el-menu-item.is-active {
-  background-color: #22ccff;
+  background-color: #eebb00;
   color: #fff;
 }
 
