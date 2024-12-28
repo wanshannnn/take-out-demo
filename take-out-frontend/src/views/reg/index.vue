@@ -29,7 +29,7 @@ const rules = { // 表单的规则检验对象
     { required: true, message: '请输入用户名', trigger: 'blur' },
     {
       pattern: /^[a-zA-Z0-9]{1,10}$/,
-      message: '用户名必须是1-10的大小写字母数字',
+      message: '用户名必须是1-10位字符长度的大小写字母或数字',
       trigger: 'blur'
     }
   ],
@@ -37,13 +37,13 @@ const rules = { // 表单的规则检验对象
     { required: true, message: '请输入密码', trigger: 'blur' },
     {
       pattern: /^\S{6,15}$/,
-      message: '密码必须是6-15的非空字符',
+      message: '密码必须是6-15位字符长度的非空字符',
       trigger: 'blur'
     }
   ],
   repassword: [
     { required: true, message: '请再次输入密码', trigger: 'blur' },
-    { pattern: /^\S{6,15}$/, message: '密码必须是6-15的非空字符', trigger: 'blur' },
+    { pattern: /^\S{6,15}$/, message: '密码必须是6-15位字符长度的非空字符', trigger: 'blur' },
     { validator: samePwd, trigger: 'blur' }
   ]
 }
@@ -173,7 +173,6 @@ body {
   width: 100%;
   height: 100vh;
   background-size: cover;
-  background-image: url('../../assets/image/reg.jpg');
   overflow: hidden; // 防止页面滚动条闪动
 }
 

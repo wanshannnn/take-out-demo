@@ -233,8 +233,8 @@ const webSocket = () => {
       ElNotification({
         title: jsonMsg.type === 1 ? '待接单' : '催单',
         message: jsonMsg.type === 1
-          ? `<span>您有1个<span style="color:#f39c12">订单待处理</span>,${jsonMsg.content},请及时接单</span>`
-          : `${jsonMsg.content}<span style='color:#f39c12;cursor: pointer'>去处理</span>`,
+          ? `<span>您有1个<span style="color:#eebb00">订单待处理</span>,${jsonMsg.content},请及时接单</span>`
+          : `${jsonMsg.content}<span style='color:#eebb00;cursor: pointer'>去处理</span>`,
         duration: 0,
         dangerouslyUseHTMLString: true,
         onClick: () => {
@@ -563,7 +563,7 @@ a:hover {
 
 .el-menu {
   padding: 30px 0 0 0;
-  background-color: #4b4533;
+  background-color: #070605;
 }
 
 .el-menu-item {

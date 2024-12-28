@@ -379,7 +379,7 @@ img {
   width: 800px;
 
   .addBut {
-    background: #409eff;
+    background: #eebb00;
     display: inline-block;
     padding: 0px 20px;
     border-radius: 3px;
@@ -430,7 +430,7 @@ img {
 
           span {
             display: inline-block;
-            color: #ffc200;
+            color: #eebb00;
             margin: 5px;
             line-height: 26px;
             padding: 0 10px;
@@ -458,7 +458,7 @@ img {
         .delFlavor {
           display: inline-block;
           padding: 0 10px;
-          color: #f19c59;
+          color: #eebb00;
           cursor: pointer;
         }
       }

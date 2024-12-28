@@ -90,7 +90,7 @@ watch(() => props.value, (newVal) => {
 
       &:active {
         background-color: #fffbf0;
-        color: #ffc200;
+        color: #eebb00;
       }
     }
 

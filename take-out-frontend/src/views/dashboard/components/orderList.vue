@@ -579,7 +579,7 @@ onMounted(() => {
       }
 
       span {
-        color: #f2a402;
+        color: #eebb00;
       }
     }
 
