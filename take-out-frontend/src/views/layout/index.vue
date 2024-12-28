@@ -317,7 +317,7 @@ onBeforeUnmount(() => {
     </el-dialog>
     <el-container>
       <el-header>
-        <img src="../../assets/image/hanye_logo.png" class="logo" />
+        <img src="../../assets/image/首页logo.png" class="logo" />
         <el-icon class="icon1" v-if="isCollapse">
           <Expand @click.stop="isCollapse = !isCollapse" />
         </el-icon>

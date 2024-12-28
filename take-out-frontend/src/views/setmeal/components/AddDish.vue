@@ -2,7 +2,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { getCategoryPageListAPI } from '@/api/category'
 import { getDishPageListAPI } from '@/api/dish'
-import Empty from '@/components/Empty.vue'
+import Empty from '@/views/404/index.vue'
 
 // ------ .d.ts 属性类型接口 ------
 interface Category {

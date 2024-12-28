@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import Empty from '@/components/Empty.vue'
+import Empty from '@/views/404/index.vue'
 import {
   getOrderDetailPageAPI,
   queryOrderDetailByIdAPI,
