@@ -635,6 +635,7 @@ onMounted(async () => {
   .active {
     background-color: #eebb00;
     font-weight: bold;
+    color: #fff;
   }
 
   .tab-item:first-child {
@@ -841,7 +842,7 @@ onMounted(async () => {
     .user-remark {
       min-height: 43px;
       line-height: 43px;
-      background: #f0fbff;
+      background: whitesmoke;
       border: 1px solid #cfc1b9;
       border-radius: 4px;
       margin-top: 10px;

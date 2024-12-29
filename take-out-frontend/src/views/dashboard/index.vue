@@ -172,7 +172,7 @@ li {
 
     li {
       flex: 1;
-      background: #eefaff;
+      background: #f5f0e1;
       border-radius: 4px;
       margin-left: 20px;
       padding: 20px;
@@ -221,7 +221,7 @@ li {
 
     li {
       flex: 1;
-      background: #eefaff;
+      background: #f5f0e1;
       border-radius: 4px;
       margin-left: 20px;
       padding: 20px;
@@ -318,7 +318,9 @@ li {
     cursor: pointer;
 
     &.active {
-      background: #eebb00
+      background: #eebb00;
+      font-weight: bold;
+      color: #FFF;
     }
   }
 

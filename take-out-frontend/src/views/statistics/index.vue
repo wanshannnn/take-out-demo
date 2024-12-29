@@ -255,7 +255,7 @@ const handleExport = async () => {
 .page {
   margin: 20px;
   padding: 0;
-  background-color: #e9f5ff;
+  background-color: #f5f0e1;
 }
 
 .title-index {
@@ -274,7 +274,7 @@ const handleExport = async () => {
       text-align: center;
       line-height: 40px;
       color: #333;
-      border: 1px solid #e5e4e4;
+      border: 1px solid #f5f0e1;
       background-color: white;
       border-left: none;
       cursor: pointer;
@@ -300,10 +300,11 @@ const handleExport = async () => {
     .active {
       background-color: #eebb00;
       font-weight: bold;
+      color: #fff;
     }
 
     .tab-item:first-child {
-      border-left: 1px solid #e5e4e4;
+      border-left: 1px solid #f5f0e1;
     }
   }
 

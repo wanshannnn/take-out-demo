@@ -292,8 +292,12 @@ onBeforeUnmount(() => {
       </el-radio-group>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="cancelStatus">取消</el-button>
-          <el-button type="primary" @click="fixStatus">确定</el-button>
+          <el-button @click="cancelStatus" style="background-color:#FFFFFF; color:#eebb00; border-color:#b6b6b6;">
+            取消
+          </el-button>
+          <el-button type="primary" @click="fixStatus" style="background-color: #eebb00; color: white; border-color:#b6b6b6;">
+            确定
+          </el-button>
         </div>
       </template>
     </el-dialog>
@@ -456,7 +460,7 @@ onBeforeUnmount(() => {
 
 .el-main {
   flex: 1;
-  background-color: #e9f5ff;
+  background-color: #f5f0e1;
   color: #333;
   /* text-align: center; */
   /* line-height: 80px; */
@@ -483,6 +487,7 @@ a:hover {
   justify-content: center;
   align-items: center;
 }
+
 </style>
 
 
@@ -530,16 +535,17 @@ a:hover {
   .el-radio {
     width: 410px; // 本来想设置100%的，但是设置成固定值能去除el-radio-last-child的样式影响
     height: 100px;
-    background: #fbfbfa;
+    background: #f5f0e1;
     border: 1px solid #e5e4e4;
     border-radius: 4px;
     padding: 14px 22px;
     margin-top: 20px;
   }
 
-  // .el-radio__input.is-checked+.el-radio__label {
-  //   span {}
-  // }
+  .el-radio.is-checked .el-radio__label {
+    color: #eebb00;
+  }
+
 }
 
 .el-badge__content.is-fixed {
